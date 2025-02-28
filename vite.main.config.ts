@@ -3,7 +3,6 @@ import { defineConfig, mergeConfig } from 'vite'
 
 import path from 'path'
 
-import { __dirname } from './src/files'
 import {
   getBuildConfig,
   getBuildDefine,

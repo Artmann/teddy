@@ -1,28 +1,37 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow } from 'electron'
 import squirrel from 'electron-squirrel-startup'
 import path from 'path'
 
-import { __dirname } from './files'
+import { ipcMain } from './ipcs'
+
+const { handle, invoke } = ipcMain
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (squirrel) {
   app.quit()
 }
 
+function getObjectMethods(obj: any): string[] {
+  return Object.getOwnPropertyNames(obj).filter(
+    (key) => typeof obj[key] === 'function'
+  )
+}
+
 const handleOnReady = () => {
-  ipcMain.handle('foo', () => {
-    console.log('main foo')
-
-    return 'bar'
-  })
-
   const mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      sandbox: false,
+      sandbox: false
     }
+  })
+
+  const methodNames = getObjectMethods(handle)
+
+  methodNames.forEach((methodName) => {
+    // @ts-ignore
+    handle[methodName].call(handle)
   })
 
   // and load the index.html of the app.
