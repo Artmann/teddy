@@ -1,5 +1,9 @@
 import type { ConfigEnv, UserConfig } from 'vite'
 import { defineConfig, mergeConfig } from 'vite'
+
+import path from 'path'
+
+import { __dirname } from './src/files'
 import {
   getBuildConfig,
   getBuildDefine,
@@ -26,6 +30,9 @@ export default defineConfig((env) => {
     plugins: [pluginHotRestart('restart')],
     define,
     resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src')
+      },
       // Load the Node.js entry.
       mainFields: ['module', 'jsnext:main', 'jsnext']
     }
