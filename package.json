@@ -23,7 +23,8 @@
     "make": "electron-forge make",
     "package": "electron-forge package",
     "publish": "electron-forge publish",
-    "start": "electron-forge start"
+    "start": "electron-forge start",
+    "test": "vitest"
   },
   "main": ".vite/build/main.js",
   "engines": {
@@ -33,10 +34,10 @@
     "@hookform/resolvers": "^4.1.2",
     "@radix-ui/react-label": "^2.1.2",
     "@radix-ui/react-slot": "^1.1.2",
-    "electron-better-ipc": "^2.0.1",
     "electron-squirrel-startup": "^1.0.1",
-    "electron-typescript-ipc": "^3.0.0",
+    "framer-motion": "^12.4.7",
     "interprocess": "^0.2.6",
+    "lodash": "^4.17.21",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
@@ -54,6 +55,7 @@
     "@electron/fuses": "^1.8.0",
     "@tailwindcss/vite": "^4.0.9",
     "@types/electron-squirrel-startup": "^1.0.2",
+    "@types/lodash": "^4.17.15",
     "@types/node": "^22.13.5",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
@@ -67,15 +69,17 @@
     "eslint": "^8.0.1",
     "eslint-import-resolver-typescript": "^3.8.3",
     "eslint-plugin-import": "^2.25.0",
-    "lucide-react": "^0.476.0",
+    "lucide-react": "^0.477.0",
     "postcss": "^8.5.3",
     "prettier": "^3.5.2",
+    "shiki": "^3.1.0",
     "tailwind-merge": "^3.0.2",
     "tailwindcss": "3",
     "tailwindcss-animate": "^1.0.7",
     "ts-node": "^10.0.0",
     "typescript": "^5",
     "vite": "^5.0.12",
-    "vite-plugin-require": "^1.2.14"
+    "vite-plugin-require": "^1.2.14",
+    "vitest": "^3.0.7"
   }
 }

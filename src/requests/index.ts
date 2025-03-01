@@ -1,8 +1,7 @@
-import { IpcMainInvokeEvent } from 'electron'
+import { sendRequest } from './send'
+
+export type { Response } from './send'
 
 export const requests = {
-  async sendRequest(_: IpcMainInvokeEvent, url: string): Promise<string> {
-    console.log(`fetching ${url}`)
-    return 'foo bar'
-  }
+  sendRequest
 }

@@ -1,16 +1,14 @@
 import { createRoot } from 'react-dom/client'
 import { createElement } from 'react'
 
-import { App } from './app/App'
+import { App } from './app'
 
 import './index.css'
-import './app/app.css'
+import './app/global.css'
 
 console.log(
   '👋 This message is being logged by "renderer.ts", included via Vite.'
 )
-
-window.api.invoke.sendRequest('foo').then(console.log)
 
 const container = document.getElementById('app')
 
