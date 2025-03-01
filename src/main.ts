@@ -1,5 +1,4 @@
 import { app, BrowserWindow } from 'electron'
-import squirrel from 'electron-squirrel-startup'
 import path from 'path'
 
 import { ipcMain } from './ipcs'
@@ -7,7 +6,7 @@ import { ipcMain } from './ipcs'
 const { handle, invoke } = ipcMain
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (squirrel) {
+if (require('electron-squirrel-startup')) {
   app.quit()
 }
 
