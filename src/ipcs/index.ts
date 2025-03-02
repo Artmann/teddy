@@ -1,6 +1,7 @@
 import { createInterprocess } from 'interprocess'
 
 import { requests } from '../requests'
+import { windowHandlers } from '../window'
 
 export const { ipcMain, ipcRenderer, exposeApiToGlobalWindow } =
   createInterprocess({
@@ -12,7 +13,8 @@ export const { ipcMain, ipcRenderer, exposeApiToGlobalWindow } =
 
         return message
       },
-      ...requests
+      ...requests,
+      ...windowHandlers
     },
 
     renderer: {

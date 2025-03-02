@@ -1,9 +1,9 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, Menu } from 'electron'
 import path from 'path'
 
 import { ipcMain } from './ipcs'
 
-const { handle, invoke } = ipcMain
+const { handle } = ipcMain
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -18,13 +18,17 @@ function getObjectMethods(obj: any): string[] {
 
 const handleOnReady = () => {
   const mainWindow = new BrowserWindow({
-    width: 1200,
+    backgroundColor: '#24273a',
+    darkTheme: true,
     height: 800,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       sandbox: false
-    }
+    },
+    width: 1200
   })
+
+  Menu.setApplicationMenu(null)
 
   const methodNames = getObjectMethods(handle)
 

@@ -70,6 +70,7 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
                     <FormControl>
                       <Input
                         autoFocus={true}
+                        className="text-blue-200"
                         disabled={isSendingRequest}
                         type="url"
                         {...field}
