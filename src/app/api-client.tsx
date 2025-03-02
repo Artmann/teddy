@@ -6,6 +6,13 @@ import { useForm } from 'react-hook-form'
 import { Button } from './components/ui/button'
 import { Form, FormControl, FormField, FormItem } from './components/ui/form'
 import { Input } from './components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from './components/ui/select'
 import { Response } from '@/requests'
 import { ResponseContent } from './response-content'
 
@@ -60,7 +67,37 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
       >
         <div className="p-4">
           <div className="flex items-center gap-2">
-            <div>GET</div>
+            <div>
+              <FormField
+                control={form.control}
+                name="method"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Select
+                        defaultValue={field.value}
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger className="w-[128px] text-blue-200">
+                          <SelectValue placeholder="GET" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-[#24273a] text-blue-200">
+                          <SelectItem value="GET">GET</SelectItem>
+                          <SelectItem value="POST">POST</SelectItem>
+                          <SelectItem value="PATCH">PATCH</SelectItem>
+                          <SelectItem value="DELETE">DELETE</SelectItem>
+                          <SelectItem value="PUT">PUT</SelectItem>
+                          <SelectItem value="OPTIONS">OPTIONS</SelectItem>
+                          <SelectItem value="TRACE">TRACE</SelectItem>
+                          <SelectItem value="CONNECT">CONNECT</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
             <div className="flex-1">
               <FormField
                 control={form.control}
