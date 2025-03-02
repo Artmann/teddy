@@ -135,14 +135,20 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
             className="h-full flex justify-center items-center text-center"
             initial={{ width: '0%' }}
             animate={{
-              width: Boolean(response) || isSendingRequest ? '50%' : '0%'
+              width:
+                Boolean(response) || isSendingRequest || requestError
+                  ? '50%'
+                  : '0%'
             }}
           >
             {isSendingRequest ? (
               <LoaderCircle className="block size-6 animate-spin" />
             ) : requestError ? (
-              <div>
-                <div>{requestError}</div>
+              <div className="flex flex-col gap-2">
+                <div className="font-semibold">
+                  There was an error sending the request
+                </div>
+                <div className="font-mono">{requestError}</div>
               </div>
             ) : response ? (
               <ResponseContent
