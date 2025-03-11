@@ -2,6 +2,7 @@ import { app, BrowserWindow, Menu } from 'electron'
 import path from 'path'
 
 import { ipcMain } from './ipcs'
+import { loadLastSession } from './sessions'
 
 const { handle } = ipcMain
 
@@ -17,13 +18,18 @@ function getObjectMethods(obj: any): string[] {
 }
 
 const handleOnReady = () => {
+  const lastSession = loadLastSession()
+
   const mainWindow = new BrowserWindow({
     backgroundColor: '#282C34',
     darkTheme: true,
     height: 800,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      sandbox: false
+      sandbox: false,
+      additionalArguments: [
+        `--session-data=${JSON.stringify(lastSession)}`
+      ]
     },
     width: 1200
   })

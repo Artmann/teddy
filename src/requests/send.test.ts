@@ -1,10 +1,16 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { sendRequest } from './send'
+import { saveSession } from '../sessions'
+
+vi.mock('../sessions', () => ({
+  saveSession: vi.fn()
+}))
 
 describe('sendRequest', () => {
   afterEach(() => {
     vi.unstubAllGlobals()
+    vi.resetAllMocks()
   })
 
   it('handles a plain text response.', async () => {
@@ -119,5 +125,32 @@ describe('sendRequest', () => {
       ],
       statusCode: 200
     })
+  })
+
+  it('saves the session.', async () => {
+    const fetch = vi.fn().mockResolvedValue({
+      status: 200,
+      text: vi.fn().mockResolvedValue('Hello, World!')
+    })
+
+    vi.stubGlobal('fetch', fetch)
+
+    await sendRequest({} as any, {
+      url: 'https://example.com'
+    })
+
+    expect(saveSession).toHaveBeenCalledWith(
+      {
+        body: undefined,
+        headers: {},
+        method: 'GET',
+        url: 'https://example.com'
+      },
+      {
+        body: 'Hello, World!',
+        headers: [],
+        statusCode: 200
+      }
+    )
   })
 })
