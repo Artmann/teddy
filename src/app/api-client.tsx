@@ -127,8 +127,8 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
               <Button
                 className="w-32"
                 disabled={isSendingRequest}
-                size="sm"
                 type="submit"
+                variant="outline"
               >
                 {isSendingRequest ? (
                   <>
