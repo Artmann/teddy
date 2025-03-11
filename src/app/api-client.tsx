@@ -14,7 +14,7 @@ import {
   SelectValue
 } from './components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs'
-import { Response, ResponseHeader } from '@/requests'
+import { Response } from '../requests'
 import { ResponseContent } from './response-content'
 import { ResponseHeaders } from './response-headers'
 
@@ -25,15 +25,19 @@ interface FormData {
 
 export const ApiClient = memo(function ApiClient(): ReactElement {
   const [isSendingRequest, setIsSendingRequest] = useState(false)
-  const [response, setResponse] = useState<Response>()
+  const [response, setResponse] = useState<Response | undefined>(
+    window.session.lastResponse
+  )
   const [requestError, setRequestError] = useState<string>()
 
   console.log({ response })
 
   const form = useForm<FormData>({
     defaultValues: {
-      method: 'GET',
-      url: 'https://jsonplaceholder.typicode.com/posts/1'
+      method: window.session.lastRequest?.method || 'GET',
+      url:
+        window.session.lastRequest?.url ||
+        'https://jsonplaceholder.typicode.com/posts/1'
     }
   })
 
@@ -169,8 +173,8 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
                     statusCode={response.statusCode}
                   />
                 </TabsContent>
-                <TabsContent 
-                  className="m-0 full" 
+                <TabsContent
+                  className="m-0 full"
                   value="headers"
                 >
                   <ResponseHeaders
