@@ -13,8 +13,10 @@ import {
   SelectTrigger,
   SelectValue
 } from './components/ui/select'
-import { Response } from '@/requests'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs'
+import { Response, ResponseHeader } from '@/requests'
 import { ResponseContent } from './response-content'
+import { ResponseHeaders } from './response-headers'
 
 interface FormData {
   method: 'GET' | 'POST' | 'PUT' | 'DELETE'
@@ -65,7 +67,7 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
         className="full flex flex-col"
         onSubmit={form.handleSubmit(handleSubmit)}
       >
-        <div className="p-4">
+        <div className="p-4 flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <div>
               <FormField
@@ -79,10 +81,10 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
                         value={field.value}
                         onValueChange={field.onChange}
                       >
-                        <SelectTrigger className="w-[128px] text-blue-200">
+                        <SelectTrigger className="w-[128px] text-white border-white">
                           <SelectValue placeholder="GET" />
                         </SelectTrigger>
-                        <SelectContent className="bg-[#24273a] text-blue-200">
+                        <SelectContent className="bg-[#282C34] text-white border-white">
                           <SelectItem value="GET">GET</SelectItem>
                           <SelectItem value="POST">POST</SelectItem>
                           <SelectItem value="PATCH">PATCH</SelectItem>
@@ -107,7 +109,7 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
                     <FormControl>
                       <Input
                         autoFocus={true}
-                        className="text-blue-200"
+                        className="text-white border-white focus-visible:border-white"
                         disabled={isSendingRequest}
                         type="url"
                         {...field}
@@ -119,42 +121,64 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
             </div>
             <div>
               <Button
+                className="w-32"
                 disabled={isSendingRequest}
                 size="sm"
                 type="submit"
               >
-                Send
+                {isSendingRequest ? (
+                  <>
+                    <LoaderCircle className="block size-6 animate-spin" />
+                    <span>Sending</span>
+                  </>
+                ) : (
+                  'Send'
+                )}
               </Button>
             </div>
+          </div>
+          <div className="font-mono text-xs text-red-700">
+            {requestError ? `Error: ${requestError}` : ' '}
           </div>
         </div>
 
         <div className="p-4 flex flex-1 min-h-0">
           <div className="w-1/2 h-full">Request</div>
           <motion.div
-            className="h-full flex justify-center items-center text-center"
+            className="h-full"
             initial={{ width: '0%' }}
             animate={{
-              width:
-                Boolean(response) || isSendingRequest || requestError
-                  ? '50%'
-                  : '0%'
+              width: response ? '50%' : '0%'
             }}
           >
-            {isSendingRequest ? (
-              <LoaderCircle className="block size-6 animate-spin" />
-            ) : requestError ? (
-              <div className="flex flex-col gap-2">
-                <div className="font-semibold">
-                  There was an error sending the request
-                </div>
-                <div className="font-mono">{requestError}</div>
-              </div>
-            ) : response ? (
-              <ResponseContent
-                content={response.body ?? ''}
-                statusCode={response.statusCode}
-              />
+            {response ? (
+              <Tabs
+                defaultValue="content"
+                className="full"
+              >
+                <TabsList>
+                  <TabsTrigger value="content">Content</TabsTrigger>
+                  <TabsTrigger value="headers">Headers</TabsTrigger>
+                </TabsList>
+                <TabsContent
+                  className="m-0 full"
+                  value="content"
+                >
+                  <ResponseContent
+                    content={response.body ?? ''}
+                    statusCode={response.statusCode}
+                  />
+                </TabsContent>
+                <TabsContent 
+                  className="m-0 full" 
+                  value="headers"
+                >
+                  <ResponseHeaders
+                    headers={response.headers}
+                    statusCode={response.statusCode}
+                  />
+                </TabsContent>
+              </Tabs>
             ) : null}
           </motion.div>
         </div>

@@ -1,8 +1,14 @@
 import { IpcMainInvokeEvent } from 'electron'
 import { merge } from 'lodash'
 
+export interface ResponseHeader {
+  name: string
+  value: string
+}
+
 export interface Response {
   body: string
+  headers: ResponseHeader[]
   statusCode: number
 }
 
@@ -35,8 +41,11 @@ export async function sendRequest(
     const fetchResponse = await fetch(props.url, {})
     const body = await fetchResponse.text()
 
-    const response = {
+    const headers = transformHeaders(fetchResponse.headers)
+
+    const response: Response = {
       body,
+      headers,
       statusCode: fetchResponse.status
     }
 
@@ -50,4 +59,17 @@ export async function sendRequest(
       response: undefined
     }
   }
+}
+
+function transformHeaders(responseHeaders?: Headers): ResponseHeader[] {
+  if (!responseHeaders) {
+    return []
+  }
+
+  const headers = [...responseHeaders.entries()].map(([key, value]) => ({
+    name: key,
+    value
+  }))
+
+  return headers
 }

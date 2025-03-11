@@ -30,7 +30,27 @@ export const ResponseContent = memo(function ResponseContent({
     function createHtml() {
       codeToHtml(content, {
         lang: language,
-        theme: 'catppuccin-macchiato'
+        theme: 'catppuccin-macchiato',
+        transformers: [
+          {
+            pre(node) {
+              node.properties.style =
+                'background-color: transparent; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;'
+
+              return node
+            },
+            code(node) {
+              if (!node.properties.style) {
+                node.properties.style = ''
+              }
+
+              node.properties.style +=
+                'white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word;'
+
+              return node
+            }
+          }
+        ]
       }).then((newHtml) => {
         setHtml(newHtml)
       })
@@ -48,7 +68,8 @@ export const ResponseContent = memo(function ResponseContent({
         className={`
         content
         full 
-        text-left whitespace-pre-wrap
+        text-left
+        whitespace-pre-wrap
         overflow-auto
         font-mono text-xs
         caret-gray
