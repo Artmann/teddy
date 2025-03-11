@@ -18,7 +18,7 @@ function getObjectMethods(obj: any): string[] {
 
 const handleOnReady = () => {
   const mainWindow = new BrowserWindow({
-    backgroundColor: '#24273a',
+    backgroundColor: '#282C34',
     darkTheme: true,
     height: 800,
     webPreferences: {
