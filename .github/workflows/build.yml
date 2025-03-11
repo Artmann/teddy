@@ -17,15 +17,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 23
+          cache: 'yarn'
 
       - name: Install dependencies
-        run: npm install
+        run: yarn install
 
       - name: Install ts-node
-        run: npm install -D ts-node typescript @types/node
+        run: yarn add -D ts-node typescript @types/node
 
       - name: Build application
-        run: npm run package
+        run: yarn package
         env:
           NODE_OPTIONS: '--import tsx'
 
