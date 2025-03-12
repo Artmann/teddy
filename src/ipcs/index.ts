@@ -1,19 +1,14 @@
 import { createInterprocess } from 'interprocess'
 
-import { requests } from '../requests'
+import { requests } from '../http'
 import { windowHandlers } from '../window'
+import { session } from '../sessions/session.node'
 
 export const { ipcMain, ipcRenderer, exposeApiToGlobalWindow } =
   createInterprocess({
     main: {
-      async getPing(_, data: 'ping') {
-        const message = `from renderer: ${data} on main process`
-
-        console.log(message)
-
-        return message
-      },
       ...requests,
+      ...session,
       ...windowHandlers
     },
 

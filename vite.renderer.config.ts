@@ -9,7 +9,7 @@ import { pluginExposeRenderer } from './vite.base.config'
 export default defineConfig(async (env) => {
   const forgeEnv = env as any
   const { root, mode, forgeConfigSelf } = forgeEnv
-  const name = forgeConfigSelf.name ?? ''
+  const name = forgeConfigSelf?.name ?? ''
 
   return {
     base: './',
@@ -25,6 +25,11 @@ export default defineConfig(async (env) => {
       },
       preserveSymlinks: true
     },
-    root
+    root,
+    test: {
+      environment: 'jsdom',
+      globals: true,
+      setupFiles: './test-setup.ts',
+    },
   } as UserConfig
 })

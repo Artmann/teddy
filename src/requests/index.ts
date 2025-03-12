@@ -1,7 +1,72 @@
-import { sendRequest } from './send'
+import { Response } from '../http'
 
-export type { Request, Response } from './send'
+export interface Request {
+  body?: string
+  id: string
+  headers: Record<string, string>
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE'
+  response?: Response
+  url: string
+}
 
-export const requests = {
-  sendRequest
+export function createNewRequest(): Request {
+  const id = createRequestId()
+
+  return {
+    id,
+    headers: {},
+    method: 'GET',
+    url: '',
+  }
+}
+
+function createRequestId(tokenRange = 9999, delimiter = '-'): string {
+  const adjectives = [
+    'autumn', 'hidden', 'bitter', 'misty', 'silent', 'empty', 'dry', 'dark',
+    'summer', 'icy', 'delicate', 'quiet', 'white', 'cool', 'spring', 'winter',
+    'patient', 'twilight', 'dawn', 'crimson', 'wispy', 'weathered', 'blue',
+    'billowing', 'broken', 'cold', 'damp', 'falling', 'frosty', 'green',
+    'long', 'late', 'lingering', 'bold', 'little', 'morning', 'muddy', 'old',
+    'red', 'rough', 'still', 'small', 'sparkling', 'shy', 'wandering',
+    'withered', 'wild', 'black', 'young', 'holy', 'solitary', 'fragrant',
+    'aged', 'snowy', 'proud', 'floral', 'restless', 'divine', 'polished',
+    'ancient', 'purple', 'lively', 'nameless', 'lucky', 'odd', 'tiny',
+    'free', 'dry', 'yellow', 'orange', 'gentle', 'tight', 'super', 'royal',
+    'broad', 'steep', 'flat', 'square', 'round', 'mute', 'noisy', 'hushy',
+    'raspy', 'soft', 'shrill', 'rapid', 'sweet', 'curly', 'calm', 'jolly',
+    'fancy', 'plain', 'shinny', 'sacred', 'brave', 'stable', 'golden', 'mighty',
+    'tropical', 'silver', 'cosmic', 'magic', 'wise', 'fresh', 'rocky', 'amber',
+    'swift', 'azure', 'noble', 'rustic', 'tranquil', 'vibrant', 'mystic', 'festive'
+  ]
+
+  const nouns = [
+    'waterfall', 'river', 'breeze', 'moon', 'rain', 'wind', 'sea', 'morning',
+    'snow', 'lake', 'sunset', 'pine', 'shadow', 'leaf', 'dawn', 'glitter',
+    'forest', 'hill', 'cloud', 'meadow', 'sun', 'glade', 'bird', 'brook',
+    'butterfly', 'bush', 'dew', 'dust', 'field', 'fire', 'flower', 'firefly',
+    'feather', 'grass', 'haze', 'mountain', 'night', 'pond', 'darkness',
+    'snowflake', 'silence', 'sound', 'sky', 'shape', 'surf', 'thunder',
+    'violet', 'water', 'wildflower', 'wave', 'water', 'resonance', 'sun',
+    'wood', 'dream', 'cherry', 'tree', 'fog', 'frost', 'voice', 'paper',
+    'frog', 'smoke', 'star', 'sierra', 'castle', 'coral', 'dune', 'ember',
+    'galaxy', 'harbor', 'ivy', 'jewel', 'kernel', 'lantern', 'maple', 'nebula',
+    'oak', 'pebble', 'quartz', 'rocket', 'stone', 'trumpet', 'universe', 'vessel',
+    'wagon', 'xylophone', 'yarn', 'zenith', 'island', 'junction', 'key', 'lodge',
+    'mime', 'needle', 'oasis', 'portal', 'quest', 'ranch', 'summit', 'twist',
+    'unity', 'valley', 'wish', 'yonder', 'zephyr', 'banner', 'crystal', 'dancer',
+    'echo', 'flute', 'garden', 'horizon', 'iris', 'laser', 'marble', 'orchard'
+  ]
+
+  const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)]
+  const randomNoun = nouns[Math.floor(Math.random() * nouns.length)]
+
+  let result = randomAdjective + delimiter + randomNoun
+
+  if (tokenRange > 0) {
+    const token = Math.floor(Math.random() * tokenRange)
+
+    result += delimiter + token
+  }
+
+  return result
 }

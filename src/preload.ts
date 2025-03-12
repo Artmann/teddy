@@ -1,8 +1,7 @@
 import { contextBridge } from 'electron'
 
 import { exposeApiToGlobalWindow } from './ipcs'
-import { RequestDto } from './sessions'
-import { Response } from './requests'
+import { Session } from './sessions'
 
 const { key, api } = exposeApiToGlobalWindow({
   exposeAll: true // expose handlers, invokers and removers
@@ -11,12 +10,9 @@ const { key, api } = exposeApiToGlobalWindow({
 declare global {
   interface Window {
     [key]: typeof api
-    session: typeof sessionData
+    session: Session
   }
 }
-
-// Parse session data from process arguments
-let sessionData: { lastRequest?: RequestDto; lastResponse?: Response } = { lastRequest: undefined, lastResponse: undefined }
 
 try {
   const sessionArg = process.argv.find(arg => arg.startsWith('--session-data='))
@@ -24,7 +20,7 @@ try {
   if (sessionArg) {
     const sessionString = sessionArg.replace('--session-data=', '')
 
-    sessionData = JSON.parse(sessionString)
+    const sessionData = JSON.parse(sessionString)
 
     contextBridge.exposeInMainWorld('session', sessionData)
   }

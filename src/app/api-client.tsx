@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { LoaderCircle } from 'lucide-react'
-import { memo, ReactElement, useCallback, useState } from 'react'
+import { memo, ReactElement, useCallback, useContext, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { Button } from './components/ui/button'
@@ -14,9 +14,9 @@ import {
   SelectValue
 } from './components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs'
-import { Response } from '../requests'
 import { ResponseContent } from './response-content'
 import { ResponseHeaders } from './response-headers'
+import { SessionContext } from '@/sessions'
 
 interface FormData {
   method: 'GET' | 'POST' | 'PUT' | 'DELETE'
@@ -24,25 +24,24 @@ interface FormData {
 }
 
 export const ApiClient = memo(function ApiClient(): ReactElement {
+  const { selectedRequest, updateResponse } = useContext(SessionContext)
+
   const [isSendingRequest, setIsSendingRequest] = useState(false)
-  const [response, setResponse] = useState<Response | undefined>(
-    window.session.lastResponse
-  )
   const [requestError, setRequestError] = useState<string>()
+
+  const response = selectedRequest.response
 
   console.log({ response })
 
   const form = useForm<FormData>({
     defaultValues: {
-      method: window.session.lastRequest?.method || 'GET',
-      url:
-        window.session.lastRequest?.url ||
-        'https://jsonplaceholder.typicode.com/posts/1'
+      method: selectedRequest.method || 'GET',
+      url: selectedRequest.url ?? ''
     }
   })
 
   const handleSubmit = useCallback(async (data: FormData) => {
-    console.log(data)
+    console.log('handleSubmit', data)
 
     setIsSendingRequest(true)
     setRequestError(undefined)
@@ -55,9 +54,12 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
         }
       })
 
-      setResponse(response)
+      updateResponse(selectedRequest.id, response)
+
       setRequestError(error)
     } catch (error: any) {
+      console.error(error)
+
       setRequestError(error.message ?? String(error))
     } finally {
       setIsSendingRequest(false)
@@ -114,6 +116,7 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
                       <Input
                         autoFocus={true}
                         className="text-white border-white focus-visible:border-white"
+                        data-testid="url-input"
                         disabled={isSendingRequest}
                         type="url"
                         {...field}

@@ -1,35 +1,19 @@
-import Store from 'electron-store'
+import { createNewRequest, Request } from '../requests'
 
-import { Request, Response } from '../requests/send'
+export * from './session-provider'
 
-export interface Session {
-  lastRequest?: Request
-  lastResponse?: Response
+export class Session {
+  public requestLibrary: Record<string, Request> = {}
+  public selectedRequestId?: string
 }
 
-interface StoredData {
-  session: Session
+export function createNewSession(): Session {
+  const session = new Session()
+  const request = createNewRequest()
+
+  session.requestLibrary[request.id] = request
+  session.selectedRequestId = request.id
+
+  return session
 }
 
-const store = new Store<StoredData>({
-  name: 'teddy-data',
-  defaults: {
-    session: {
-      lastRequest: undefined,
-      lastResponse: undefined
-    }
-  }
-})
-
-export function saveSession(request: Request, response?: Response): void {
-  const session: Session = {
-    lastRequest: request,
-    lastResponse: response
-  }
-
-  store.set('session', session)
-}
-
-export function loadLastSession(): Session {
-  return store.get('session')
-}
