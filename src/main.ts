@@ -2,7 +2,8 @@ import { app, BrowserWindow, Menu } from 'electron'
 import path from 'path'
 
 import { ipcMain } from './ipcs'
-import { loadLastSession } from './sessions'
+import { createNewSession } from './sessions'
+import { loadLastSession } from './sessions/session.node'
 
 const { handle } = ipcMain
 
@@ -19,6 +20,9 @@ function getObjectMethods(obj: any): string[] {
 
 const handleOnReady = () => {
   const lastSession = loadLastSession()
+  const session = lastSession ?? createNewSession()
+
+  console.dir(session)
 
   const mainWindow = new BrowserWindow({
     backgroundColor: '#282C34',
@@ -28,7 +32,7 @@ const handleOnReady = () => {
       preload: path.join(__dirname, 'preload.js'),
       sandbox: false,
       additionalArguments: [
-        `--session-data=${JSON.stringify(lastSession)}`
+        `--session-data=${JSON.stringify(session)}`
       ]
     },
     width: 1200

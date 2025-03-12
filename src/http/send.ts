@@ -1,13 +1,5 @@
-import { saveSession } from '../sessions'
 import { IpcMainInvokeEvent } from 'electron'
 import { merge } from 'lodash'
-
-export interface Request {
-  body?: string
-  headers: Record<string, string>
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE'
-  url: string
-}
 
 export interface ResponseHeader {
   name: string
@@ -43,15 +35,11 @@ export async function sendRequest(
 ): Promise<{ error?: string; response?: Response }> {
   const options: RequestOptions = merge({}, defaultOptions, props.options)
 
-  const request = createRequest(props.url, options)
-
-  console.log(`[${request.method}] ${request.url}`)
-
   try {
-    const fetchResponse = await fetch(request.url, {
-      method: request.method,
-      headers: request.headers,
-      body: request.body
+    const fetchResponse = await fetch(props.url, {
+      method: options.method,
+      headers: options.headers,
+      body: options.body
     })
     const body = await fetchResponse.text()
 
@@ -63,26 +51,16 @@ export async function sendRequest(
       statusCode: fetchResponse.status
     }
 
-    saveSession(request, response)
-
     return {
       error: undefined,
       response: response
     }
   } catch (e: any) {
+    console.log('Failed to send the request:', e)
     return {
       error: e.message ?? String(e),
       response: undefined
     }
-  }
-}
-
-function createRequest(url: string, options: RequestOptions): Request {
-  return {
-    body: options.body,
-    headers: options.headers,
-    method: options.method,
-    url
   }
 }
 

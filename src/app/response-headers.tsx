@@ -1,5 +1,5 @@
 import { memo, ReactElement } from 'react'
-import { ResponseHeader } from '@/requests'
+import { ResponseHeader } from '@/http'
 import { Badge } from './components/ui/badge'
 import {
   Table,

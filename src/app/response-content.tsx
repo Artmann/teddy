@@ -61,23 +61,29 @@ export const ResponseContent = memo(function ResponseContent({
   return (
     <div className="full relative">
       <div className="absolute top-4 right-4">
-        <Badge variant="outline">{statusCode}</Badge>
+        <Badge
+          data-testid="response-status-code"
+          variant="outline"
+        >
+          {statusCode}
+        </Badge>
       </div>
 
       <div
         className={`
-        content
-        full 
-        text-left
-        whitespace-pre-wrap
-        overflow-auto
-        font-mono text-xs
-        caret-gray
-        tab-4
-        px-6 py-5
-        bg-transparent
-      `}
+          content
+          full 
+          text-left
+          whitespace-pre-wrap
+          overflow-auto
+          font-mono text-xs
+          caret-gray
+          tab-4
+          px-6 py-5
+          bg-transparent
+        `}
         dangerouslySetInnerHTML={{ __html: html }}
+        data-testid="response-body"
       />
     </div>
   )
