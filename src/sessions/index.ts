@@ -16,4 +16,3 @@ export function createNewSession(): Session {
 
   return session
 }
-

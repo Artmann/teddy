@@ -1,6 +1,6 @@
 import { memo, ReactElement } from 'react'
+
 import { ResponseHeader } from '@/http'
-import { Badge } from './components/ui/badge'
 import {
   Table,
   TableBody,
@@ -8,7 +8,7 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from './components/ui/table'
+} from '../ui/table'
 
 interface ResponseHeadersProps {
   headers: ResponseHeader[]
@@ -16,16 +16,11 @@ interface ResponseHeadersProps {
 }
 
 export const ResponseHeaders = memo(function ResponseHeaders({
-  headers,
-  statusCode
+  headers
 }: ResponseHeadersProps): ReactElement {
   return (
     <div className="full relative text-white">
-      <div className="absolute top-4 right-4">
-        <Badge variant="outline">{statusCode}</Badge>
-      </div>
-
-      <div className="full overflow-auto p-6 font-mono">
+      <div className="full overflow-auto font-mono">
         {headers.length === 0 ? (
           <div className="italic">No headers</div>
         ) : (

@@ -1,21 +1,40 @@
 // @vitest-environment jsdom
+
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi, beforeEach } from 'vitest'
 
 import { ApiClient } from './api-client'
 import { SessionProvider } from '../sessions'
 
-describe('ApiClient', () => {
-  window.api = {
-    invoke: {
-      saveSession: vi.fn(),
-      sendRequest: vi.fn()
+// Add types to the window
+declare global {
+  interface Window {
+    api: {
+      invoke: {
+        loadSession: () => Promise<void>
+        saveSession: () => Promise<void>
+        sendRequest: () => Promise<void>
+      }
     }
-  } as any
+  }
+}
+
+describe('ApiClient', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+
+    window.api = {
+      invoke: {
+        loadSession: vi.fn(),
+        saveSession: vi.fn(),
+        sendRequest: vi.fn()
+      }
+    }
+  })
 
   it('opens up with the last request', async () => {
-    window.session = {
+    const mockSession = {
       requestLibrary: {
         'tranquil-fog-531': {
           id: 'tranquil-fog-531',
@@ -32,13 +51,18 @@ describe('ApiClient', () => {
       selectedRequestId: 'tranquil-fog-531'
     }
 
+    window.api.invoke.loadSession.mockResolvedValue(mockSession)
+
     render(
       <SessionProvider>
         <ApiClient />
       </SessionProvider>
     )
 
-    expect(screen.getByTestId('url-input')).toHaveValue('https://example.com')
+    // Wait for session to load
+    await waitFor(() => {
+      expect(screen.getByTestId('url-input')).toHaveValue('https://example.com')
+    })
 
     await waitFor(() => {
       expect(screen.getByText('Hello, world!')).toBeInTheDocument()
@@ -48,7 +72,7 @@ describe('ApiClient', () => {
   })
 
   it('sends a request and shows the response.', async () => {
-    window.session = {
+    const mockSession = {
       requestLibrary: {
         'azure-fog-422': {
           id: 'azure-fog-422',
@@ -59,6 +83,8 @@ describe('ApiClient', () => {
       },
       selectedRequestId: 'azure-fog-422'
     }
+
+    window.api.invoke.loadSession.mockResolvedValue(mockSession)
 
     const json = JSON.stringify(
       {
@@ -71,7 +97,7 @@ describe('ApiClient', () => {
       2
     )
 
-    vi.mocked(window.api.invoke.sendRequest).mockResolvedValue({
+    window.api.invoke.sendRequest.mockResolvedValue({
       error: undefined,
       response: {
         body: json,
@@ -88,6 +114,11 @@ describe('ApiClient', () => {
 
     const user = userEvent.setup()
 
+    // Wait for session to load
+    await waitFor(() => {
+      expect(screen.getByTestId('url-input')).toBeInTheDocument()
+    })
+
     await user.type(
       screen.getByTestId('url-input'),
       'https://example.com/api/v1/contacts'
@@ -96,10 +127,10 @@ describe('ApiClient', () => {
     await user.click(screen.getByText('Send'))
 
     expect(window.api.invoke.sendRequest).toHaveBeenCalledWith({
-      options: {
-        method: 'GET'
-      },
-      url: 'https://example.com/api/v1/contacts'
+      request: expect.objectContaining({
+        method: 'GET',
+        url: 'https://example.com/api/v1/contacts'
+      })
     })
 
     await waitFor(() => {

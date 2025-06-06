@@ -1,7 +1,5 @@
-import { memo, ReactElement, useEffect, useMemo, useState } from 'react'
+import { memo, type ReactElement, useEffect, useMemo, useState } from 'react'
 import { codeToHtml } from 'shiki'
-
-import { Badge } from './components/ui/badge'
 
 interface ResponseContentProps {
   content: string
@@ -9,8 +7,7 @@ interface ResponseContentProps {
 }
 
 export const ResponseContent = memo(function ResponseContent({
-  content,
-  statusCode
+  content
 }: ResponseContentProps): ReactElement {
   const [html, setHtml] = useState('')
 
@@ -60,15 +57,6 @@ export const ResponseContent = memo(function ResponseContent({
 
   return (
     <div className="full relative">
-      <div className="absolute top-4 right-4">
-        <Badge
-          data-testid="response-status-code"
-          variant="outline"
-        >
-          {statusCode}
-        </Badge>
-      </div>
-
       <div
         className={`
           content
@@ -79,7 +67,6 @@ export const ResponseContent = memo(function ResponseContent({
           font-mono text-xs
           caret-gray
           tab-4
-          px-6 py-5
           bg-transparent
         `}
         dangerouslySetInnerHTML={{ __html: html }}
