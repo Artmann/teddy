@@ -1,5 +1,8 @@
-import { IpcMainInvokeEvent } from 'electron'
-import { merge } from 'lodash'
+import type { IpcMainInvokeEvent } from 'electron'
+
+import { transformRequestIntoFetchRequest } from './transformers'
+
+import type { Request } from '@/requests'
 
 export interface ResponseHeader {
   name: string
@@ -12,35 +15,21 @@ export interface Response {
   statusCode: number
 }
 
-interface RequestOptions {
-  body?: string
-  headers: Record<string, string>
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE'
-}
-
 interface RequestProps {
-  url: string
-  options?: Partial<RequestOptions>
-}
-
-const defaultOptions: RequestOptions = {
-  body: undefined,
-  headers: {},
-  method: 'GET'
+  request: Request
 }
 
 export async function sendRequest(
   _: IpcMainInvokeEvent,
   props: RequestProps
 ): Promise<{ error?: string; response?: Response }> {
-  const options: RequestOptions = merge({}, defaultOptions, props.options)
+  const { url, options } = transformRequestIntoFetchRequest(props.request)
+
+  console.log('Sending request to', url, 'with options:', options)
 
   try {
-    const fetchResponse = await fetch(props.url, {
-      method: options.method,
-      headers: options.headers,
-      body: options.body
-    })
+    const fetchResponse = await fetch(url, options)
+    
     const body = await fetchResponse.text()
 
     const headers = transformHeaders(fetchResponse.headers)
@@ -50,6 +39,8 @@ export async function sendRequest(
       headers,
       statusCode: fetchResponse.status
     }
+
+    console.log('Received response:', response)
 
     return {
       error: undefined,

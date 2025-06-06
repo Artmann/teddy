@@ -30,6 +30,11 @@ export default defineConfig(async (env) => {
       environment: 'jsdom',
       globals: true,
       setupFiles: './test-setup.ts',
-    },
+      environmentOptions: {
+        jsdom: {
+          resources: 'usable'
+        }
+      }
+    }
   } as UserConfig
 })

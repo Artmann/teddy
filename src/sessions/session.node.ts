@@ -1,24 +1,40 @@
-import { IpcMainInvokeEvent } from 'electron'
 import Store from 'electron-store'
 
-import { Session } from '.'
+import type { Session } from '.'
 
 interface StoredData {
   session: Session
 }
 
 const store = new Store<StoredData>({
-  name: 'teddy-data',
+  name: process.env.NODE_ENV === 'test' ? 'teddy-data-test' : 'teddy-data'
 })
 
-export function loadLastSession(): Session {
+export function loadLastSession(): Session | undefined {
   console.log('Loading last session...')
 
-  return store.get('session')
+  const session = store.get('session')
+  console.log('Loaded session:', session)
+  
+  return session
 }
 
 export const session = {
-  saveSession: async (_: IpcMainInvokeEvent, session: Session): Promise<string | undefined> => {
+  loadSession: async (): Promise<Session | undefined> => {
+    try {
+      console.log('Loading session via IPC...')
+      const session = loadLastSession()
+      console.log('Loaded session via IPC:', session)
+      return session
+    } catch (error: any) {
+      console.error('Failed to load the session:', error)
+      return undefined
+    }
+  },
+
+  saveSession: async (
+    session: Session
+  ): Promise<string | undefined> => {
     try {
       store.set('session', session)
 

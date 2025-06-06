@@ -4,6 +4,7 @@ import path from 'path'
 import { ipcMain } from './ipcs'
 import { createNewSession } from './sessions'
 import { loadLastSession } from './sessions/session.node'
+import Store from 'electron-store'
 
 const { handle } = ipcMain
 
@@ -19,23 +20,26 @@ function getObjectMethods(obj: any): string[] {
 }
 
 const handleOnReady = () => {
+  // Initialize session storage if it doesn't exist
   const lastSession = loadLastSession()
-  const session = lastSession ?? createNewSession()
-
-  console.dir(session)
+  if (!lastSession) {
+    const session = createNewSession()
+    console.log('Creating new session on startup:', session)
+    
+    // Save the new session to storage
+    const store = new Store({ name: 'teddy-data' })
+    store.set('session', session)
+  }
 
   const mainWindow = new BrowserWindow({
     backgroundColor: '#282C34',
     darkTheme: true,
-    height: 800,
+    height: 900,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      sandbox: false,
-      additionalArguments: [
-        `--session-data=${JSON.stringify(session)}`
-      ]
+      sandbox: false
     },
-    width: 1200
+    width: 1600
   })
 
   Menu.setApplicationMenu(null)

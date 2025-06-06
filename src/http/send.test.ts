@@ -2,26 +2,34 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { sendRequest } from './send'
 
-vi.mock('../sessions', () => ({
-  saveSession: vi.fn()
-}))
+// Mock global fetch
+const mockFetch = vi.fn()
+Object.defineProperty(globalThis, 'fetch', {
+  value: mockFetch,
+  writable: true
+})
 
 describe('sendRequest', () => {
   afterEach(() => {
-    vi.unstubAllGlobals()
-    vi.resetAllMocks()
+    // Clear mocks manually
+    mockFetch.mockClear()
   })
 
   it('handles a plain text response.', async () => {
-    const fetch = vi.fn().mockResolvedValue({
+    mockFetch.mockResolvedValue({
       status: 200,
       text: vi.fn().mockResolvedValue('Hello, World!')
     })
 
-    vi.stubGlobal('fetch', fetch)
+    const mockRequest = {
+      id: 'test',
+      method: 'GET',
+      url: 'https://example.com',
+      headers: {}
+    }
 
     const { error, response } = await sendRequest({} as any, {
-      url: 'https://example.com'
+      request: mockRequest
     })
 
     expect(error).toBeUndefined()
@@ -35,17 +43,22 @@ describe('sendRequest', () => {
   it('handles JSON responses.', async () => {
     const mockContacts = [{ name: 'Alice' }, { name: 'Bob' }]
 
-    const fetch = vi.fn().mockResolvedValue({
+    mockFetch.mockResolvedValue({
       status: 200,
       text: vi
         .fn()
         .mockResolvedValue(JSON.stringify({ contacts: mockContacts }))
     })
 
-    vi.stubGlobal('fetch', fetch)
+    const mockRequest = {
+      id: 'test',
+      method: 'GET',
+      url: 'https://example.com',
+      headers: {}
+    }
 
     const { error, response } = await sendRequest({} as any, {
-      url: 'https://example.com'
+      request: mockRequest
     })
 
     expect(error).toBeUndefined()
@@ -57,15 +70,20 @@ describe('sendRequest', () => {
   })
 
   it('handles a 404 response.', async () => {
-    const fetch = vi.fn().mockResolvedValue({
+    mockFetch.mockResolvedValue({
       status: 404,
       text: vi.fn().mockResolvedValue('Not Found')
     })
 
-    vi.stubGlobal('fetch', fetch)
+    const mockRequest = {
+      id: 'test',
+      method: 'GET',
+      url: 'https://example.com',
+      headers: {}
+    }
 
     const { error, response } = await sendRequest({} as any, {
-      url: 'https://example.com'
+      request: mockRequest
     })
 
     expect(error).toBeUndefined()
@@ -77,12 +95,17 @@ describe('sendRequest', () => {
   })
 
   it('handles errors.', async () => {
-    const fetch = vi.fn().mockRejectedValue(new Error('Network error'))
+    mockFetch.mockRejectedValue(new Error('Network error'))
 
-    vi.stubGlobal('fetch', fetch)
+    const mockRequest = {
+      id: 'test',
+      method: 'GET',
+      url: 'https://example.com',
+      headers: {}
+    }
 
     const { error, response } = await sendRequest({} as any, {
-      url: 'https://example.com'
+      request: mockRequest
     })
 
     expect(error).toBe('Network error')
@@ -99,7 +122,7 @@ describe('sendRequest', () => {
     headers.set('Content-type', 'application/json')
     headers.set('keep-alive', 'timeout=5')
 
-    const fetch = vi.fn().mockResolvedValue({
+    mockFetch.mockResolvedValue({
       headers,
       status: 200,
       text: vi
@@ -107,10 +130,15 @@ describe('sendRequest', () => {
         .mockResolvedValue(JSON.stringify({ contacts: mockContacts }))
     })
 
-    vi.stubGlobal('fetch', fetch)
+    const mockRequest = {
+      id: 'test',
+      method: 'GET',
+      url: 'https://example.com',
+      headers: {}
+    }
 
     const { error, response } = await sendRequest({} as any, {
-      url: 'https://example.com'
+      request: mockRequest
     })
 
     expect(error).toBeUndefined()
