@@ -13,10 +13,19 @@ const store = new Store<StoredData>({
 export function loadLastSession(): Session | undefined {
   console.log('Loading last session...')
 
-  const session = store.get('session')
-  console.log('Loaded session:', session)
+  const storedSession = store.get('session')
+  console.log('Loaded session:', storedSession)
   
-  return session
+  if (!storedSession) {
+    return undefined
+  }
+
+  const cleanSession = {
+    requestLibrary: storedSession.requestLibrary || {},
+    selectedRequestId: storedSession.selectedRequestId
+  }
+  
+  return cleanSession as Session
 }
 
 export const session = {
@@ -33,10 +42,17 @@ export const session = {
   },
 
   saveSession: async (
+    event: any,
     session: Session
   ): Promise<string | undefined> => {
     try {
-      store.set('session', session)
+      // Create a clean session object with only the properties we need
+      const cleanSession = {
+        requestLibrary: session.requestLibrary || {},
+        selectedRequestId: session.selectedRequestId
+      }
+      
+      store.set('session', cleanSession)
 
       return undefined
     } catch (error: any) {
