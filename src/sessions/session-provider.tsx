@@ -43,7 +43,7 @@ export function SessionProvider({
           console.log('Session loaded:', loadedSession)
           
           // Ensure requestLibrary exists and is an object
-          if (!loadedSession.requestLibrary || typeof loadedSession.requestLibrary !== 'object') {
+          if (!loadedSession.requestLibrary || typeof loadedSession.requestLibrary !== 'object' || Array.isArray(loadedSession.requestLibrary)) {
             loadedSession.requestLibrary = {}
           }
           
