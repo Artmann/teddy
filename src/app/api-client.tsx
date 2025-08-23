@@ -6,6 +6,7 @@ import {
   useContext,
   useState
 } from 'react'
+import { useHotkeys } from 'react-hotkeys-hook'
 
 import { Button } from './components/ui/button'
 import { Input } from './components/ui/input'
@@ -45,8 +46,12 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
   }
 
   const handleSubmit = useCallback(
-    async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault()
+    async (e?: React.FormEvent<HTMLFormElement>) => {
+      e?.preventDefault()
+
+      if (isSendingRequest) {
+        return
+      }
 
       console.log('Sending a request', selectedRequest)
 
@@ -69,7 +74,29 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
         setIsSendingRequest(false)
       }
     },
-    [selectedRequest, updateResponse]
+    [selectedRequest, updateResponse, isSendingRequest]
+  )
+
+  const handleUrlKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        e.preventDefault()
+        handleSubmit()
+      }
+    },
+    [handleSubmit]
+  )
+
+  // Global Cmd+Enter (Mac) / Ctrl+Enter (Windows/Linux) handler
+  useHotkeys(
+    'mod+enter',
+    (e) => {
+      e.preventDefault()
+      handleSubmit()
+    },
+    {
+      enabled: !isSendingRequest
+    }
   )
 
   return (
@@ -110,6 +137,7 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
               type="url"
               value={selectedRequest.url}
               onChange={handleChangeUrl}
+              onKeyDown={handleUrlKeyDown}
             />
           </div>
           <div>
@@ -153,7 +181,7 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
               className="m-0 flex-1 min-h-0 py-4"
               value="body"
             >
-              <RequestBody />
+              <RequestBody onSubmit={handleSubmit} />
             </TabsContent>
 
             <TabsContent
