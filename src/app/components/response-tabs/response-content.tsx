@@ -11,21 +11,29 @@ export const ResponseContent = memo(function ResponseContent({
 }: ResponseContentProps): ReactElement {
   const [html, setHtml] = useState('')
 
-  const language = useMemo(() => {
+  const { formattedContent, language } = useMemo(() => {
+    let formatted = content
+    let lang = 'plaintext'
+
     if (content.startsWith('[') || content.startsWith('{')) {
-      return 'json'
+      lang = 'json'
+      try {
+        const parsed = JSON.parse(content)
+        formatted = JSON.stringify(parsed, null, 2)
+      } catch {
+        // If JSON parsing fails, use original content
+        formatted = content
+      }
+    } else if (content.startsWith('<')) {
+      lang = 'html'
     }
 
-    if (content.startsWith('<')) {
-      return 'html'
-    }
-
-    return 'plaintext'
+    return { formattedContent: formatted, language: lang }
   }, [content])
 
   useEffect(
     function createHtml() {
-      codeToHtml(content, {
+      codeToHtml(formattedContent, {
         lang: language,
         theme: 'catppuccin-macchiato',
         transformers: [
@@ -52,7 +60,7 @@ export const ResponseContent = memo(function ResponseContent({
         setHtml(newHtml)
       })
     },
-    [content, language]
+    [formattedContent, language]
   )
 
   return (
