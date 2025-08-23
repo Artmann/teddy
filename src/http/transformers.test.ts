@@ -28,7 +28,7 @@ describe('transformRequestIntoFetchRequest', () => {
     const request: Request = {
       id: 'test-2',
       headers: {
-        'Authorization': 'Bearer token123',
+        Authorization: 'Bearer token123',
         'X-Custom-Header': 'custom-value'
       },
       method: 'GET',
@@ -40,7 +40,7 @@ describe('transformRequestIntoFetchRequest', () => {
     expect(result.options.headers).toEqual({
       Accept: '*/*',
       'User-Agent': 'Teddy API Client',
-      'Authorization': 'Bearer token123',
+      Authorization: 'Bearer token123',
       'X-Custom-Header': 'custom-value'
     })
   })
@@ -62,7 +62,9 @@ describe('transformRequestIntoFetchRequest', () => {
     const result = transformRequestIntoFetchRequest(request)
 
     expect(result.options.method).toBe('POST')
-    expect(result.options.body).toBe('{"name": "John Doe", "email": "john@example.com"}')
+    expect(result.options.body).toBe(
+      '{"name": "John Doe", "email": "john@example.com"}'
+    )
     expect(result.options.headers).toEqual({
       Accept: '*/*',
       'User-Agent': 'Teddy API Client',
@@ -87,9 +89,15 @@ describe('transformRequestIntoFetchRequest', () => {
     const result = transformRequestIntoFetchRequest(request)
 
     expect(result.options.method).toBe('POST')
-    expect(result.options.body).toBe(JSON.stringify({ 
-      query: 'query { users { id name } }' 
-    }, null, 2))
+    expect(result.options.body).toBe(
+      JSON.stringify(
+        {
+          query: 'query { users { id name } }'
+        },
+        null,
+        2
+      )
+    )
     expect(result.options.headers).toEqual({
       Accept: '*/*',
       'User-Agent': 'Teddy API Client',
@@ -118,7 +126,9 @@ describe('transformRequestIntoFetchRequest', () => {
     const result = transformRequestIntoFetchRequest(request)
 
     expect(result.options.method).toBe('POST')
-    expect(result.options.body).toBe('username=john&password=secret123&remember=true')
+    expect(result.options.body).toBe(
+      'username=john&password=secret123&remember=true'
+    )
     expect(result.options.headers).toEqual({
       Accept: '*/*',
       'User-Agent': 'Teddy API Client'
@@ -246,7 +256,7 @@ describe('transformRequestIntoFetchRequest', () => {
     const request: Request = {
       id: 'test-12',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'User-Agent': 'Custom Agent'
       },
       method: 'GET',

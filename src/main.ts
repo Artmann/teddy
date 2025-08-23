@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu } from 'electron'
+import { app, BrowserWindow, Menu, ipcMain as electronIpcMain } from 'electron'
 import path from 'path'
 
 import { ipcMain } from './ipcs'
@@ -34,6 +34,7 @@ const handleOnReady = () => {
   const mainWindow = new BrowserWindow({
     backgroundColor: '#282C34',
     darkTheme: true,
+    frame: false,
     height: 900,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -60,7 +61,32 @@ const handleOnReady = () => {
     )
   }
 
-  mainWindow.webContents.openDevTools()
+  // Only open dev tools in development
+  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+    mainWindow.webContents.openDevTools()
+  }
+
+  // Window control IPC handlers
+  electronIpcMain.handle('window-minimize', () => {
+    mainWindow.minimize()
+  })
+
+  electronIpcMain.handle('window-maximize', () => {
+    if (mainWindow.isMaximized()) {
+      mainWindow.restore()
+    } else {
+      mainWindow.maximize()
+    }
+    return mainWindow.isMaximized()
+  })
+
+  electronIpcMain.handle('window-close', () => {
+    mainWindow.close()
+  })
+
+  electronIpcMain.handle('window-is-maximized', () => {
+    return mainWindow.isMaximized()
+  })
 }
 
 // This method will be called when Electron has finished
@@ -81,7 +107,7 @@ app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow()
+    handleOnReady()
   }
 })
 
