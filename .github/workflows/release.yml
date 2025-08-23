@@ -5,6 +5,11 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to release (e.g., v0.1.1)'
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -32,10 +37,12 @@ jobs:
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: false
 
-      - name: Publish to GitHub Releases
-        run: yarn run publish
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-build
+          path: out/make/**/*
+          retention-days: 1
 
   build-windows:
     runs-on: windows-latest
@@ -57,7 +64,61 @@ jobs:
       - name: Build Windows app
         run: yarn make
 
-      - name: Publish to GitHub Releases
-        run: yarn run publish
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: out/make/**/*
+          retention-days: 1
+
+  publish:
+    needs: [build-macos, build-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download macOS artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-build
+          path: ./artifacts/macos
+
+      - name: Download Windows artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-build
+          path: ./artifacts/windows
+
+      - name: List artifacts
+        run: |
+          echo "macOS artifacts:"
+          find ./artifacts/macos -type f -name "*.zip" -o -name "*.dmg" | head -20
+          echo "Windows artifacts:"
+          find ./artifacts/windows -type f -name "*.exe" -o -name "*.msi" -o -name "*.nupkg" | head -20
+
+      - name: Get release tag
+        id: get_tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.tag }}" ]; then
+            echo "tag=${{ github.event.inputs.tag }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create or update release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.get_tag.outputs.tag }}
+          name: Release ${{ steps.get_tag.outputs.tag }}
+          draft: false
+          prerelease: false
+          files: |
+            ./artifacts/macos/**/*.zip
+            ./artifacts/macos/**/*.dmg
+            ./artifacts/windows/**/*.exe
+            ./artifacts/windows/**/*.msi
+            ./artifacts/windows/**/*.nupkg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
