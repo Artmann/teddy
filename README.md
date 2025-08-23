@@ -9,6 +9,8 @@
 
 ⚡️ A Blazing fast API client for macOS and Windows.
 
+![Teddy](./teddy-ui-1.png)
+
 ## Development
 
 Install the dependencies:
