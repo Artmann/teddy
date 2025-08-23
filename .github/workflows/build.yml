@@ -24,7 +24,7 @@ jobs:
           cache: 'yarn'
 
       - name: Install dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile --network-timeout 100000
 
       - name: Install ts-node
         run: yarn add -D ts-node typescript @types/node
