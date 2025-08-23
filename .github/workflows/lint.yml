@@ -5,9 +5,13 @@ on:
     branches: ['**']
 
 jobs:
-  test:
-    name: Run Tests
+  lint:
+    name: Run Linter
     runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [22, 23, 24]
 
     steps:
       - name: Checkout code
@@ -16,7 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 23
+          node-version: ${{ matrix.node-version }}
           cache: 'yarn'
 
       - name: Install dependencies
