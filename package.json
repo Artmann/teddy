@@ -1,7 +1,7 @@
 {
   "name": "teddy",
   "productName": "teddy",
-  "version": "1.0.1",
+  "version": "0.0.2",
   "description": "⚡️ Blazing fast API client.",
   "keywords": [
     "api",
@@ -68,6 +68,7 @@
     "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
     "@electron-forge/plugin-fuses": "^7.4.0",
     "@electron-forge/plugin-vite": "^7.4.0",
+    "@electron-forge/publisher-github": "^7.8.3",
     "@electron/fuses": "^1.8.0",
     "@tailwindcss/postcss": "^4.1.12",
     "@tailwindcss/vite": "^4.1.12",

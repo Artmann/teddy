@@ -1,4 +1,5 @@
 import { app, BrowserWindow, Menu, ipcMain as electronIpcMain } from 'electron'
+import fs from 'fs'
 import path from 'path'
 
 import { ipcMain } from './ipcs'
@@ -11,11 +12,18 @@ const { handle } = ipcMain
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (process.platform === 'win32') {
   try {
-    if (require('electron-squirrel-startup')) {
-      app.quit()
-    }
+    // Using dynamic import to handle optional dependency
+    import('electron-squirrel-startup')
+      .then((squirrelStartup) => {
+        if (squirrelStartup.default) {
+          app.quit()
+        }
+      })
+      .catch(() => {
+        // Module not found in production build, which is fine for non-Windows platforms
+        console.log('electron-squirrel-startup not found, continuing...')
+      })
   } catch (e) {
-    // Module not found in production build, which is fine for non-Windows platforms
     console.log('electron-squirrel-startup not found, continuing...')
   }
 }
@@ -40,8 +48,8 @@ const handleOnReady = () => {
 
   const iconPath = path.join(process.cwd(), 'icon.png')
   console.log('Icon path:', iconPath)
-  console.log('Icon exists:', require('fs').existsSync(iconPath))
-  
+  console.log('Icon exists:', fs.existsSync(iconPath))
+
   const mainWindow = new BrowserWindow({
     backgroundColor: '#282C34',
     darkTheme: true,

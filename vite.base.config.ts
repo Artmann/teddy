@@ -12,11 +12,7 @@ export const external = [
   ...builtins,
   ...Object.keys(
     'dependencies' in pkg ? (pkg.dependencies as Record<string, unknown>) : {}
-  ).filter((dep) => ![
-    'electron-store',
-    'interprocess',
-    'react',
-  ].includes(dep))
+  ).filter((dep) => !['electron-store', 'interprocess', 'react'].includes(dep))
 ]
 
 export function getBuildConfig(env: ConfigEnv<'build'>): UserConfig {

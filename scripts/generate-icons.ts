@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import sharp from 'sharp'
-import png2icons from 'png2icons'
+import { BILINEAR, createICNS, createICO } from 'png2icons'
 
 const inputIcon = path.join(__dirname, '..', 'icon.png')
 const outputDir = path.join(__dirname, '..', 'build-resources')
@@ -24,36 +24,46 @@ async function generateIcons(): Promise<void> {
   const allSizes: number[] = [...new Set([...macSizes, ...winSizes])]
 
   for (const size of allSizes) {
-    const buffer = await sharp(inputIcon)
-      .resize(size, size)
-      .png()
-      .toBuffer()
-    
+    const buffer = await sharp(inputIcon).resize(size, size).png().toBuffer()
+
     // Save individual PNG files
-    await fs.promises.writeFile(path.join(outputDir, `icon-${size}.png`), buffer)
+    await fs.promises.writeFile(
+      path.join(outputDir, `icon-${size}.png`),
+      buffer
+    )
     console.log(`Generated ${size}x${size} PNG`)
-    
+
     // Generate individual .icns files for each size
     try {
-      const icnsBuffer = png2icons.createICNS(buffer, png2icons.BILINEAR, 0)
+      const icnsBuffer = createICNS(buffer, BILINEAR, 0)
       if (icnsBuffer) {
-        await fs.promises.writeFile(path.join(outputDir, `icon-${size}.icns`), icnsBuffer)
+        await fs.promises.writeFile(
+          path.join(outputDir, `icon-${size}.icns`),
+          icnsBuffer
+        )
         console.log(`Generated ${size}x${size} ICNS`)
       } else {
-        console.warn(`Failed to generate ${size}x${size} .icns file: buffer is null`)
+        console.warn(
+          `Failed to generate ${size}x${size} .icns file: buffer is null`
+        )
       }
     } catch (error) {
       console.warn(`Failed to generate ${size}x${size} .icns file:`, error)
     }
-    
+
     // Generate individual .ico files for each size
     try {
-      const icoBuffer = png2icons.createICO(buffer, png2icons.BILINEAR, 0, false)
+      const icoBuffer = createICO(buffer, BILINEAR, 0, false)
       if (icoBuffer) {
-        await fs.promises.writeFile(path.join(outputDir, `icon-${size}.ico`), icoBuffer)
+        await fs.promises.writeFile(
+          path.join(outputDir, `icon-${size}.ico`),
+          icoBuffer
+        )
         console.log(`Generated ${size}x${size} ICO`)
       } else {
-        console.warn(`Failed to generate ${size}x${size} .ico file: buffer is null`)
+        console.warn(
+          `Failed to generate ${size}x${size} .ico file: buffer is null`
+        )
       }
     } catch (error) {
       console.warn(`Failed to generate ${size}x${size} .ico file:`, error)
@@ -66,7 +76,7 @@ async function generateIcons(): Promise<void> {
 
   // Generate consolidated .icns file for macOS
   try {
-    const icnsBuffer = png2icons.createICNS(originalBuffer, png2icons.BILINEAR, 0)
+    const icnsBuffer = createICNS(originalBuffer, BILINEAR, 0)
     if (icnsBuffer) {
       await fs.promises.writeFile(path.join(outputDir, 'icon.icns'), icnsBuffer)
       console.log('Generated consolidated icon.icns for macOS')
@@ -79,7 +89,7 @@ async function generateIcons(): Promise<void> {
 
   // Generate consolidated .ico file for Windows
   try {
-    const icoBuffer = png2icons.createICO(originalBuffer, png2icons.BILINEAR, 0, false)
+    const icoBuffer = createICO(originalBuffer, BILINEAR, 0, false)
     if (icoBuffer) {
       await fs.promises.writeFile(path.join(outputDir, 'icon.ico'), icoBuffer)
       console.log('Generated consolidated icon.ico for Windows')
@@ -92,7 +102,9 @@ async function generateIcons(): Promise<void> {
 
   console.log('Icons generated successfully!')
   console.log('Generated files in:', outputDir)
-  console.log('Available formats: PNG, ICNS, ICO (all sizes + consolidated versions)')
+  console.log(
+    'Available formats: PNG, ICNS, ICO (all sizes + consolidated versions)'
+  )
 }
 
 generateIcons().catch(console.error)

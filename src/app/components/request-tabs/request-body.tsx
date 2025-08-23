@@ -14,7 +14,9 @@ interface RequestBodyProps {
   onSubmit?: () => void
 }
 
-export const RequestBody = memo(function RequestBody({ onSubmit }: RequestBodyProps): ReactElement {
+export const RequestBody = memo(function RequestBody({
+  onSubmit
+}: RequestBodyProps): ReactElement {
   const { selectedRequest, updateRequest } = useContext(SessionContext)
 
   const bodyType = selectedRequest.bodyType || 'none'

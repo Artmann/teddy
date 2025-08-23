@@ -276,10 +276,10 @@ describe('ApiClient', () => {
     }
 
     window.api.invoke.loadSession.mockResolvedValue(mockSession)
-    
+
     // Mock a slow response
     let resolveRequest: any
-    const requestPromise = new Promise(resolve => {
+    const requestPromise = new Promise((resolve) => {
       resolveRequest = resolve
     })
     window.api.invoke.sendRequest.mockReturnValue(requestPromise)
@@ -299,10 +299,10 @@ describe('ApiClient', () => {
 
     const urlInput = screen.getByTestId('url-input')
     await user.click(urlInput)
-    
+
     // Start first request
     await user.keyboard('{Enter}')
-    
+
     // Wait for sending state
     await waitFor(() => {
       expect(screen.getByText('Sending')).toBeInTheDocument()
@@ -326,5 +326,4 @@ describe('ApiClient', () => {
       }
     })
   })
-
 })
