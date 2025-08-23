@@ -2,6 +2,8 @@ import { forwardRef } from 'react'
 import CodeMirror from '@uiw/react-codemirror'
 import { json } from '@codemirror/lang-json'
 import { catppuccinMacchiato } from '@catppuccin/codemirror'
+import { keymap } from '@codemirror/view'
+import { Prec } from '@codemirror/state'
 
 import { cn } from '@/lib/utils'
 
@@ -12,6 +14,7 @@ export interface CodeEditorProps {
   placeholder?: string
   className?: string
   readOnly?: boolean
+  onSubmit?: () => void
 }
 
 const CodeEditor = forwardRef<HTMLDivElement, CodeEditorProps>(
@@ -22,7 +25,8 @@ const CodeEditor = forwardRef<HTMLDivElement, CodeEditorProps>(
       language = 'json',
       placeholder,
       className,
-      readOnly = false
+      readOnly = false,
+      onSubmit
     },
     ref
   ) => {
@@ -30,6 +34,23 @@ const CodeEditor = forwardRef<HTMLDivElement, CodeEditorProps>(
 
     if (language === 'json' || language === 'graphql') {
       extensions.push(json())
+    }
+
+    // Add custom keymap for Cmd+Enter / Ctrl+Enter with high precedence
+    if (onSubmit) {
+      extensions.push(
+        Prec.high(
+          keymap.of([
+            {
+              key: 'Mod-Enter',
+              run: () => {
+                onSubmit()
+                return true
+              }
+            }
+          ])
+        )
+      )
     }
 
     return (

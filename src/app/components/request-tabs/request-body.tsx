@@ -10,7 +10,11 @@ import {
 import { CodeEditor } from '../ui/code-editor'
 import { SessionContext } from '@/sessions'
 
-export const RequestBody = memo(function RequestBody(): ReactElement {
+interface RequestBodyProps {
+  onSubmit?: () => void
+}
+
+export const RequestBody = memo(function RequestBody({ onSubmit }: RequestBodyProps): ReactElement {
   const { selectedRequest, updateRequest } = useContext(SessionContext)
 
   const bodyType = selectedRequest.bodyType || 'none'
@@ -61,6 +65,7 @@ export const RequestBody = memo(function RequestBody(): ReactElement {
           bodyType === 'json' ? '{\n  "key": "value"\n}' : 'query {\n  field\n}'
         }
         className="w-full flex-1 min-h-0"
+        onSubmit={onSubmit}
       />
     )
   }
