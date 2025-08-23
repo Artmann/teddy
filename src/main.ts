@@ -31,11 +31,16 @@ const handleOnReady = () => {
     store.set('session', session)
   }
 
+  const iconPath = path.join(process.cwd(), 'icon.png')
+  console.log('Icon path:', iconPath)
+  console.log('Icon exists:', require('fs').existsSync(iconPath))
+  
   const mainWindow = new BrowserWindow({
     backgroundColor: '#282C34',
     darkTheme: true,
     frame: false,
     height: 900,
+    icon: iconPath,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       sandbox: false
