@@ -39,12 +39,15 @@ function getEncodedBody(request: Request): string | undefined {
 
   if (request.bodyType === 'form') {
     return new URLSearchParams(
-      request.body.form.reduce((acc, item) => {
-        if (item?.name && item?.value) {
-          acc[item.name] = item.value
-        }
-        return acc
-      }, {} as Record<string, string>)
+      request.body.form.reduce(
+        (acc, item) => {
+          if (item?.name && item?.value) {
+            acc[item.name] = item.value
+          }
+          return acc
+        },
+        {} as Record<string, string>
+      )
     ).toString()
   }
 }
@@ -55,7 +58,10 @@ function getPrefilledHeaders(request: Request): Record<string, string> {
     'User-Agent': 'Teddy API Client'
   }
 
-  if (request.bodyType && ['json', 'graphql'].includes(request.bodyType.toLowerCase())) {
+  if (
+    request.bodyType &&
+    ['json', 'graphql'].includes(request.bodyType.toLowerCase())
+  ) {
     headers['Content-Type'] = 'application/json'
   }
 

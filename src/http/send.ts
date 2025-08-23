@@ -13,6 +13,7 @@ export interface Response {
   body: string
   headers: ResponseHeader[]
   statusCode: number
+  sizeInBytes: number
 }
 
 interface RequestProps {
@@ -29,14 +30,20 @@ export async function sendRequest(
 
   try {
     const fetchResponse = await fetch(url, options)
-    
+
     const body = await fetchResponse.text()
 
     const headers = transformHeaders(fetchResponse.headers)
 
+    const contentLengthHeader = fetchResponse.headers.get('content-length')
+    const sizeInBytes = contentLengthHeader
+      ? parseInt(contentLengthHeader, 10)
+      : new Blob([body]).size
+
     const response: Response = {
       body,
       headers,
+      sizeInBytes,
       statusCode: fetchResponse.status
     }
 

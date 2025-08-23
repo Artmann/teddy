@@ -25,6 +25,7 @@ import { RequestAuth } from './components/request-tabs/request-auth'
 import { RequestHeaders } from './components/request-tabs/request-headers'
 import { RequestParams } from './components/request-tabs/request-params'
 import { Badge } from './components/ui/badge'
+import { Size } from './components/size'
 
 export const ApiClient = memo(function ApiClient(): ReactElement {
   const { selectedRequest, updateRequest, updateResponse } =
@@ -226,7 +227,12 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
 
                 <Badge variant="muted">357ms</Badge>
 
-                <Badge variant="muted">83 bytes</Badge>
+                <Badge
+                  variant="muted"
+                  data-testid="response-size"
+                >
+                  <Size sizeInBytes={response.sizeInBytes} />
+                </Badge>
               </div>
             </div>
           ) : (

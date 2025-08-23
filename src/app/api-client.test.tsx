@@ -43,6 +43,7 @@ describe('ApiClient', () => {
           response: {
             body: 'Hello, world!',
             headers: [],
+            sizeInBytes: 13,
             statusCode: 200
           },
           url: 'https://example.com'
@@ -69,6 +70,7 @@ describe('ApiClient', () => {
     })
 
     expect(screen.getByTestId('response-status-code')).toHaveTextContent('200')
+    expect(screen.getByTestId('response-size')).toHaveTextContent('13 bytes')
   })
 
   it('sends a request and shows the response.', async () => {
@@ -102,6 +104,7 @@ describe('ApiClient', () => {
       response: {
         body: json,
         headers: [],
+        sizeInBytes: json.length,
         statusCode: 200
       }
     })
@@ -138,6 +141,7 @@ describe('ApiClient', () => {
     })
 
     expect(screen.getByTestId('response-status-code')).toHaveTextContent('200')
+    expect(screen.getByTestId('response-size')).toHaveTextContent('160 bytes')
 
     const textContent = screen.getByTestId('response-body').textContent
 

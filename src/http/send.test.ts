@@ -17,6 +17,7 @@ describe('sendRequest', () => {
 
   it('handles a plain text response.', async () => {
     mockFetch.mockResolvedValue({
+      headers: new Headers(),
       status: 200,
       text: vi.fn().mockResolvedValue('Hello, World!')
     })
@@ -36,6 +37,7 @@ describe('sendRequest', () => {
     expect(response).toEqual({
       body: 'Hello, World!',
       headers: [],
+      sizeInBytes: 13,
       statusCode: 200
     })
   })
@@ -44,6 +46,7 @@ describe('sendRequest', () => {
     const mockContacts = [{ name: 'Alice' }, { name: 'Bob' }]
 
     mockFetch.mockResolvedValue({
+      headers: new Headers(),
       status: 200,
       text: vi
         .fn()
@@ -65,12 +68,14 @@ describe('sendRequest', () => {
     expect(response).toEqual({
       body: JSON.stringify({ contacts: mockContacts }),
       headers: [],
+      sizeInBytes: 46,
       statusCode: 200
     })
   })
 
   it('handles a 404 response.', async () => {
     mockFetch.mockResolvedValue({
+      headers: new Headers(),
       status: 404,
       text: vi.fn().mockResolvedValue('Not Found')
     })
@@ -90,6 +95,7 @@ describe('sendRequest', () => {
     expect(response).toEqual({
       body: 'Not Found',
       headers: [],
+      sizeInBytes: 9,
       statusCode: 404
     })
   })
@@ -150,6 +156,7 @@ describe('sendRequest', () => {
         { name: 'keep-alive', value: 'timeout=5' },
         { name: 'origin', value: '' }
       ],
+      sizeInBytes: 46,
       statusCode: 200
     })
   })

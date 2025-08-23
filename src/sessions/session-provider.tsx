@@ -38,19 +38,28 @@ export function SessionProvider({
       try {
         console.log('Loading session via IPC...')
         const loadedSession = await window.api.invoke.loadSession()
-        
+
         if (loadedSession) {
           console.log('Session loaded:', loadedSession)
-          
+
           // Ensure requestLibrary exists and is an object
-          if (!loadedSession.requestLibrary || typeof loadedSession.requestLibrary !== 'object' || Array.isArray(loadedSession.requestLibrary)) {
+          if (
+            !loadedSession.requestLibrary ||
+            typeof loadedSession.requestLibrary !== 'object' ||
+            Array.isArray(loadedSession.requestLibrary)
+          ) {
             loadedSession.requestLibrary = {}
           }
-          
+
           // Ensure session has a selected request
-          if (!loadedSession.selectedRequestId && Object.keys(loadedSession.requestLibrary).length > 0) {
+          if (
+            !loadedSession.selectedRequestId &&
+            Object.keys(loadedSession.requestLibrary).length > 0
+          ) {
             // Select the first available request if no request is selected
-            loadedSession.selectedRequestId = Object.keys(loadedSession.requestLibrary)[0]
+            loadedSession.selectedRequestId = Object.keys(
+              loadedSession.requestLibrary
+            )[0]
           } else if (!loadedSession.selectedRequestId) {
             // If no requests exist, create a new one
             const newRequest = createNewRequest()

@@ -3,10 +3,10 @@
 ## Commands
 
 - Start app: `bun start`
-- Run all tests: `bun test`
-- Run single test: `bun vitest src/requests/send.test.ts`
-- Lint: `bun run lint`
-- Format: `bun run format`
+- Run all tests: `bun run test`
+- Run single test: `bun run test src/requests/send.test.ts`
+- Lint: `bun lint`
+- Format: `bun format`
 - Build package: `bun run package`
 - Build for distribution: `bun run make`
 
@@ -32,3 +32,35 @@ throughout.
 
 - You can install shadcn/ui component using the shadd command. "bun shadd
   scroll-area"
+
+- Always use bracers for controls statements like "if".
+
+Be generous with blank lines. Separate different parts by blank lines. Always
+put a blank line after const groups
+
+```
+const a = 1
+const b = 2
+
+print(a, b)
+```
+
+Sort everything like fields and functions in alphabetical order by default
+
+Put public (exported) functions and variables and interfaces at the top of the
+file.
+
+For React props, put key and ref first. The rest in alphabetical order.
+Callbacks/functions last
+
+```
+<ListItem
+  key={item.id}
+  date={item.createdAt}
+  title={item.title}
+  onClick={() => {}}
+/>
+```
+
+- When running the tests suite use "bun run test run" or "bun run test run
+  --coverage" for non-interactive mode

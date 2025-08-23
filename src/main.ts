@@ -25,7 +25,7 @@ const handleOnReady = () => {
   if (!lastSession) {
     const session = createNewSession()
     console.log('Creating new session on startup:', session)
-    
+
     // Save the new session to storage
     const store = new Store({ name: 'teddy-data' })
     store.set('session', session)

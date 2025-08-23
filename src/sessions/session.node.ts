@@ -15,7 +15,7 @@ export function loadLastSession(): Session | undefined {
 
   const storedSession = store.get('session')
   console.log('Loaded session:', storedSession)
-  
+
   if (!storedSession) {
     return undefined
   }
@@ -24,7 +24,7 @@ export function loadLastSession(): Session | undefined {
     requestLibrary: storedSession.requestLibrary || {},
     selectedRequestId: storedSession.selectedRequestId
   }
-  
+
   return cleanSession as Session
 }
 
@@ -51,7 +51,7 @@ export const session = {
         requestLibrary: session.requestLibrary || {},
         selectedRequestId: session.selectedRequestId
       }
-      
+
       store.set('session', cleanSession)
 
       return undefined

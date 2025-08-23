@@ -35,10 +35,7 @@ const CodeEditor = forwardRef<HTMLDivElement, CodeEditorProps>(
     return (
       <div
         ref={ref}
-        className={cn(
-          'overflow-hidden h-full bg-transparent',
-          className
-        )}
+        className={cn('overflow-hidden h-full bg-transparent', className)}
       >
         <CodeMirror
           value={value}
