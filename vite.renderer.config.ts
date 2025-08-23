@@ -27,6 +27,26 @@ export default defineConfig(async (env) => {
     },
     root,
     test: {
+      coverage: {
+        exclude: [
+          '**/node_modules/**',
+          '**/test-setup.ts',
+          '**/*.config.ts',
+          '**/*.config.js',
+          '**/*.config.mts',
+          '**/src/app/components/ui/**',
+          '**/dist/**',
+          '**/.vite/**',
+          '**/coverage/**',
+          '**/*.d.ts',
+          '**/forge.config.js',
+          '**/electron.vite.config.ts',
+          '**/src/main.ts',
+          '**/src/preload.ts',
+          '**/src/renderer.ts'
+        ],
+        reporter: ['text', 'html', 'json']
+      },
       environment: 'jsdom',
       globals: true,
       setupFiles: './test-setup.ts',

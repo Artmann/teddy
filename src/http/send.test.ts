@@ -121,6 +121,73 @@ describe('sendRequest', () => {
     expect(response).toBeUndefined()
   })
 
+  it('handles response with content-length header', async () => {
+    const headers = new Headers()
+    headers.set('content-length', '42')
+
+    mockFetch.mockResolvedValue({
+      headers,
+      status: 200,
+      text: vi.fn().mockResolvedValue('Response with content-length')
+    })
+
+    const mockRequest = {
+      id: 'test',
+      method: 'GET',
+      url: 'https://example.com',
+      headers: {}
+    }
+
+    const { error, response } = await sendRequest({} as any, {
+      request: mockRequest
+    })
+
+    expect(error).toBeUndefined()
+    expect(response).toEqual({
+      body: 'Response with content-length',
+      headers: [{ name: 'content-length', value: '42' }],
+      responseTimeInMilliseconds: expect.any(Number),
+      sizeInBytes: 42,
+      statusCode: 200
+    })
+  })
+
+  it('handles error without message', async () => {
+    mockFetch.mockRejectedValue({ toString: () => 'Unknown error' })
+
+    const mockRequest = {
+      id: 'test',
+      method: 'GET',
+      url: 'https://example.com',
+      headers: {}
+    }
+
+    const { error, response } = await sendRequest({} as any, {
+      request: mockRequest
+    })
+
+    expect(error).toBe('Unknown error')
+    expect(response).toBeUndefined()
+  })
+
+  it('handles undefined error', async () => {
+    mockFetch.mockRejectedValue(undefined)
+
+    const mockRequest = {
+      id: 'test',
+      method: 'GET',
+      url: 'https://example.com',
+      headers: {}
+    }
+
+    const { error, response } = await sendRequest({} as any, {
+      request: mockRequest
+    })
+
+    expect(error).toBe('undefined')
+    expect(response).toBeUndefined()
+  })
+
   it('returns the headers.', async () => {
     const mockContacts = [{ name: 'Alice' }, { name: 'Bob' }]
 

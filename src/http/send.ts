@@ -63,7 +63,7 @@ export async function sendRequest(
   } catch (e: any) {
     console.log('Failed to send the request:', e)
     return {
-      error: e.message ?? String(e),
+      error: e?.message ?? String(e),
       response: undefined
     }
   }
