@@ -1,5 +1,12 @@
 # Teddy
 
+[![GitHub release](https://img.shields.io/github/v/release/artmann/teddy?style=flat-square)](https://github.com/artmann/teddy/releases)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/artmann/teddy/build.yml?branch=main&style=flat-square)](https://github.com/artmann/teddy/actions/workflows/build.yml)
+[![Tests](https://img.shields.io/github/actions/workflow/status/artmann/teddy/test.yml?branch=main&label=tests&style=flat-square)](https://github.com/artmann/teddy/actions/workflows/test.yml)
+[![License](https://img.shields.io/github/license/artmann/teddy?style=flat-square)](https://github.com/artmann/teddy/blob/main/LICENSE)
+[![Node Version](https://img.shields.io/badge/node-%E2%89%A522.18.0-brightgreen?style=flat-square)](https://nodejs.org)
+[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-blue?style=flat-square)](https://github.com/artmann/teddy/releases)
+
 ⚡️ A Blazing fast API client for macOS and Windows.
 
 ## Development
