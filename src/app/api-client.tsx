@@ -225,7 +225,12 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
                   </div>
                 </div>
 
-                <Badge variant="muted">357ms</Badge>
+                <Badge
+                  variant="muted"
+                  data-testid="response-time"
+                >
+                  {response.responseTimeInMilliseconds}ms
+                </Badge>
 
                 <Badge
                   variant="muted"

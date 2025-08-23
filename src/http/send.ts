@@ -12,8 +12,9 @@ export interface ResponseHeader {
 export interface Response {
   body: string
   headers: ResponseHeader[]
-  statusCode: number
+  responseTimeInMilliseconds: number
   sizeInBytes: number
+  statusCode: number
 }
 
 interface RequestProps {
@@ -28,8 +29,13 @@ export async function sendRequest(
 
   console.log('Sending request to', url, 'with options:', options)
 
+  const startTime = performance.now()
+
   try {
     const fetchResponse = await fetch(url, options)
+
+    const endTime = performance.now()
+    const responseTimeInMilliseconds = Math.round(endTime - startTime)
 
     const body = await fetchResponse.text()
 
@@ -43,6 +49,7 @@ export async function sendRequest(
     const response: Response = {
       body,
       headers,
+      responseTimeInMilliseconds,
       sizeInBytes,
       statusCode: fetchResponse.status
     }

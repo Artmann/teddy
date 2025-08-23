@@ -37,6 +37,7 @@ describe('sendRequest', () => {
     expect(response).toEqual({
       body: 'Hello, World!',
       headers: [],
+      responseTimeInMilliseconds: expect.any(Number),
       sizeInBytes: 13,
       statusCode: 200
     })
@@ -68,6 +69,7 @@ describe('sendRequest', () => {
     expect(response).toEqual({
       body: JSON.stringify({ contacts: mockContacts }),
       headers: [],
+      responseTimeInMilliseconds: expect.any(Number),
       sizeInBytes: 46,
       statusCode: 200
     })
@@ -95,6 +97,7 @@ describe('sendRequest', () => {
     expect(response).toEqual({
       body: 'Not Found',
       headers: [],
+      responseTimeInMilliseconds: expect.any(Number),
       sizeInBytes: 9,
       statusCode: 404
     })
@@ -156,6 +159,7 @@ describe('sendRequest', () => {
         { name: 'keep-alive', value: 'timeout=5' },
         { name: 'origin', value: '' }
       ],
+      responseTimeInMilliseconds: expect.any(Number),
       sizeInBytes: 46,
       statusCode: 200
     })
