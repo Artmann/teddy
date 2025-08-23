@@ -9,8 +9,15 @@ import Store from 'electron-store'
 const { handle } = ipcMain
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) {
-  app.quit()
+if (process.platform === 'win32') {
+  try {
+    if (require('electron-squirrel-startup')) {
+      app.quit()
+    }
+  } catch (e) {
+    // Module not found in production build, which is fine for non-Windows platforms
+    console.log('electron-squirrel-startup not found, continuing...')
+  }
 }
 
 function getObjectMethods(obj: any): string[] {
