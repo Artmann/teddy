@@ -102,7 +102,7 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
   return (
     <form
       aria-disabled={isSendingRequest}
-      className="full flex flex-col 2"
+      className="full flex flex-col 24"
       onSubmit={handleSubmit}
     >
       {/* Header */}
