@@ -272,7 +272,7 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
             <div className="w-full flex items-center justify-center h-full text-muted-foreground">
               <div className="text-center">
                 <SendIcon className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>Send a request to see the response</p>
+                <p>Send a request to see the response.</p>
               </div>
             </div>
           )}
