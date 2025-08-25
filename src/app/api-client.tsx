@@ -159,7 +159,7 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
           </div>
         </div>
         <div className="font-mono text-xs text-red-700">
-          {requestError ? `Error: ${requestError}` : ' '}
+          {requestError ? `Error: 2 ${requestError}` : ' '}
         </div>
       </div>
 
