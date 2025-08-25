@@ -117,7 +117,7 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
                 <SelectValue placeholder="GET" />
               </SelectTrigger>
               <SelectContent className="bg-[#282C34] text-white border-white">
-                <SelectItem value="GET">GET</SelectItem>
+                <SelectItem value="GET">GET THAT</SelectItem>
                 <SelectItem value="POST">POST</SelectItem>
                 <SelectItem value="PATCH">PATCH</SelectItem>
                 <SelectItem value="DELETE">DELETE</SelectItem>
