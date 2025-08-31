@@ -53,7 +53,7 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
         return
       }
 
-      console.log('Sending a request1', selectedRequest)
+      console.log('Sending a request', selectedRequest)
 
       setIsSendingRequest(true)
       setRequestError(undefined)
