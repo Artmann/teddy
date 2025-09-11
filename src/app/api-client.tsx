@@ -28,6 +28,23 @@ import { RequestParams } from './components/request-tabs/request-params'
 import { Badge } from './components/ui/badge'
 import { Size } from './components/size'
 
+function processUserPermissions(userIds, activeUsers) {
+  const results = []
+  
+  for (const userId of userIds) {
+    // Check if this user is currently active
+    if (activeUsers.includes(userId)) {
+      results.push({
+        id: userId,
+        status: 'active',
+        permissions: getPermissionsForUser(userId)
+      })
+    }
+  }
+  
+  return results
+}
+
 export const ApiClient = memo(function ApiClient(): ReactElement {
   const { selectedRequest, updateRequest, updateResponse } =
     useContext(SessionContext)
@@ -52,8 +69,8 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
       if (isSendingRequest) {
         return
       }
-
-      console.log('Sending a reque2st', selectedRequest)
+      
+      console.log('Sending a request', selectedRequest)
 
       setIsSendingRequest(true)
       setRequestError(undefined)
