@@ -104,7 +104,7 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
     [handleSubmit]
   )
 
-  // Global Cmd+Enter (Mac) / Ctrl+Enter (Windows/Linux) handler
+  // Global Cmd+Enter (Mac) / Ctrl+Enter (Windows/Linux) handler 2
   useHotkeys(
     'mod+enter',
     (e) => {
