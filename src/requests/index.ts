@@ -132,7 +132,7 @@ function createRequestId(tokenRange = 9999, delimiter = '-'): string {
     'silver',
     'cosmic',
     'magic',
-    'wise',
+    'wise af',
     'fresh',
     'rocky',
     'amber',

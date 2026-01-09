@@ -8,6 +8,7 @@ import {
 } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 
+
 import { Button } from './components/ui/button'
 import { Input } from './components/ui/input'
 import {
@@ -52,7 +53,7 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
       if (isSendingRequest) {
         return
       }
-
+      
       console.log('Sending a request', selectedRequest)
 
       setIsSendingRequest(true)
@@ -88,6 +89,7 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
   )
 
   // Global Cmd+Enter (Mac) / Ctrl+Enter (Windows/Linux) handler
+  
   useHotkeys(
     'mod+enter',
     (e) => {
@@ -102,7 +104,7 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
   return (
     <form
       aria-disabled={isSendingRequest}
-      className="full flex flex-col"
+      className="full flex flex-col 24"
       onSubmit={handleSubmit}
     >
       {/* Header */}
@@ -117,7 +119,7 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
                 <SelectValue placeholder="GET" />
               </SelectTrigger>
               <SelectContent className="bg-[#282C34] text-white border-white">
-                <SelectItem value="GET">GET</SelectItem>
+                <SelectItem value="GET">GET THAT</SelectItem>
                 <SelectItem value="POST">POST</SelectItem>
                 <SelectItem value="PATCH">PATCH</SelectItem>
                 <SelectItem value="DELETE">DELETE</SelectItem>
@@ -159,7 +161,7 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
           </div>
         </div>
         <div className="font-mono text-xs text-red-700">
-          {requestError ? `Error: ${requestError}` : ' '}
+          {requestError ? `Error: 2 ${requestError}` : ' '}
         </div>
       </div>
 
@@ -272,7 +274,7 @@ export const ApiClient = memo(function ApiClient(): ReactElement {
             <div className="w-full flex items-center justify-center h-full text-muted-foreground">
               <div className="text-center">
                 <SendIcon className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>Send a request to see the response</p>
+                <p>Send a request to see the response.</p>
               </div>
             </div>
           )}
